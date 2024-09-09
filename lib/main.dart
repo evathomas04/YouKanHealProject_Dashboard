@@ -68,35 +68,89 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 3, 98, 18),
+              ),
+              child: Text(
+                'Menu',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text('Home'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.info),
+              title: Text('About'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.flag),
+              title: Text('Challenge'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.dashboard),
+              title: Text('Dashboard'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.contact_mail),
+              title: Text('Contact'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+      appBar: AppBar(
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ),
+        title: Center(
+          child: Image.asset(
+            'assets/logo.png',
+            fit: BoxFit.contain,
+            height: 40,
+          ),
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.account_circle),
+            onPressed: () {},
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 30.0),
-              child: PreferredSize(
-                preferredSize: const Size.fromHeight(kToolbarHeight),
-                child: AppBar(
-                  leading: IconButton(
-                    icon: const Icon(Icons.menu),
-                    onPressed: () {},
-                  ),
-                  title: Center(
-                    child: Image.asset(
-                      'assets/logo.png',
-                      fit: BoxFit.contain,
-                      height: 40,
-                    ),
-                  ),
-                  actions: <Widget>[
-                    IconButton(
-                      icon: const Icon(Icons.account_circle),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-              ),
-            ),
             const SizedBox(height: 20),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -296,26 +350,28 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                     Divider(height: 1.0, color: Colors.grey),
-                    // Display filtered institutions
-                    ...filteredInstitutions.map((institution) {
-                      return ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: AssetImage(institution['logo']!),
-                        ),
-                        title: Text(institution['name']!),
-                        subtitle: Text(institution['place']!),
-                        trailing: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: <Widget>[
-                            Text(
-                              institution['value']!,
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Text(institution['date']!),
-                          ],
-                        ),
-                      );
-                    }).toList(),
+                    // Display filtered list of institutions
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: filteredInstitutions.length,
+                      itemBuilder: (context, index) {
+                        final institution = filteredInstitutions[index];
+                        return ListTile(
+                          leading: Image.asset(institution['logo']!),
+                          title: Text(institution['name']!),
+                          subtitle: Text(institution['place']!),
+                          trailing: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text('₹ ${institution['value']}'),
+                              Text(institution['date']!),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -337,9 +393,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Image.asset(
-                        'assets/green.png',
-                        height: 40,
-                        width: 40,
+                        'assets/green.png', // Path to the small logo
+                        height: 40, // Adjust the height as needed
+                        width: 40, // Adjust the width as needed
                       ),
                       const SizedBox(height: 10),
                       const Text(
